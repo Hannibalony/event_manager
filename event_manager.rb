@@ -28,19 +28,26 @@ def save_thank_you_letters(id,form_letter)
 end
 
 
+
+def clean_phone(phone)
+  phone.rjust(1, "\n")[0..11]
+
+end
+
 contents = CSV.open "event_attendees.csv", headers: true, header_converters: :symbol 
 
 contents.each do |row|
   id = row[0]
   name = row[:first_name]
   zipcode = clean_zipcode(row[:zipcode])
+  phone = clean_phone(row[:homephone])
   legislators = legislators_by_zipcode(zipcode)
   
   form_letter = erb_template.result(binding)
   
   save_thank_you_letters(id,form_letter)
 
-  puts "#{name} | #{zipcode} | #{legislators}"
+  puts "#{name} | #{zipcode} | #{legislators} | #{phone}"
   
 end 
 
